@@ -26,6 +26,7 @@ function preload () {
     this.load.image('sky', 'img/sky3.jpg');
     this.load.image('ground', 'img/tile1.png');
     this.load.image('groundf', 'img/groundf.png');
+    this.load.image('clef', 'img/clef.png');
     this.load.spritesheet('hero', 'img/herof.png', { frameWidth: 54.6, frameHeight: 95 });
 }
 
@@ -33,8 +34,13 @@ function preload () {
 function create () {
     //this.cameras.main.setBounds(0, 0, 720, 1280).setName('main');
     //This allow the camera to go lower
-    this.cameras.main.setBounds(0, 0, 600, 1280);
+    //this.cameras.main.setBounds(0, 0, 600, 1280);
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
+    //Center the camera to the bottom
+    this.cameras.main.scrollY = 505;
+    
+    clef = this.physics.add.staticGroup();
+    clef.create(350,1100,'clef');
 
     platforms = this.physics.add.staticGroup();
     platforms.create(50, 250, 'ground');
@@ -56,9 +62,9 @@ function create () {
     // platforms.create(800, 600, 'ground');
     // platforms.create(750, 220, 'ground');
 
-    player = this.physics.add.sprite(0, 0, 'hero');
-    //player.y=0;
+    player = this.physics.add.sprite(20, 1200, 'hero');
     player.setBounce(0.1);
+
     //if true the sprites is locked at 800px and can't go to the bottom
     player.setCollideWorldBounds(false);
     this.physics.add.collider(player, platforms);
@@ -88,11 +94,12 @@ function create () {
 }
 
 function update () {
-    if (cursors.left.isDown)  {
+    //lock player between left border
+    if (cursors.left.isDown && player.x > 15)  {
         player.setVelocityX(-200);
         player.anims.play('left', true);
     }
-    else if (cursors.right.isDown) {
+    else if (cursors.right.isDown && player.x < 575) {
         player.setVelocityX(200);
         player.anims.play('right', true);
     }
@@ -105,5 +112,8 @@ function update () {
         player.setVelocityY(-400);
     }
 
-    this.cameras.main.scrollY = player.y -400;
+    //Limit the scrollY camera to the limit of the game
+    if(player.y>400 && player.y<910){
+        this.cameras.main.scrollY = player.y -400;
+    }
 }
