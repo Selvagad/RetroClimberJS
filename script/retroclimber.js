@@ -1,7 +1,7 @@
 var config = {
     type: Phaser.AUTO,
-    width: 720,
-    height: 1280,
+    width: 600,
+    height: 800,
     physics: {
         default: 'arcade',
         arcade: {
@@ -26,12 +26,14 @@ function preload () {
     this.load.image('sky', 'img/sky3.jpg');
     this.load.image('ground', 'img/tile1.png');
     this.load.image('groundf', 'img/groundf.png');
-    this.load.spritesheet('hero', 'img/herof.png', { frameWidth: 55, frameHeight: 95 });
+    this.load.spritesheet('hero', 'img/herof.png', { frameWidth: 54.6, frameHeight: 95 });
 }
 
 
 function create () {
     //this.cameras.main.setBounds(0, 0, 720, 1280).setName('main');
+    //This allow the camera to go lower
+    this.cameras.main.setBounds(0, 0, 600, 1280);
     this.add.image(0, 0, 'sky').setOrigin(0, 0);
 
     platforms = this.physics.add.staticGroup();
@@ -54,10 +56,11 @@ function create () {
     // platforms.create(800, 600, 'ground');
     // platforms.create(750, 220, 'ground');
 
-    player = this.physics.add.sprite(100, 450, 'hero');
-    player.y=0;
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    player = this.physics.add.sprite(0, 0, 'hero');
+    //player.y=0;
+    player.setBounce(0.1);
+    //if true the sprites is locked at 800px and can't go to the bottom
+    player.setCollideWorldBounds(false);
     this.physics.add.collider(player, platforms);
     espace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
